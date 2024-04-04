@@ -44,8 +44,7 @@ We've used **C#** and **Unity** game engine.
 
 ### Periods
 
-* 2021-08 ~ 2022-04 (about 9 months) - main development and build for the pc version
-* 2022-04 ~ now - build for the mobile version
+* 2021-09 ~ 2022-03
 
 ## Scripts overview
 
