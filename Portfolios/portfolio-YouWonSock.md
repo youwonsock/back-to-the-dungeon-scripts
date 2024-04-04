@@ -37,10 +37,6 @@
 
 <b><h2>Contribution</h2></b> 
 
-
-### Trailer
-[![Back to The Dungeon Trailer](https://img.youtube.com/vi/hy_my0OQddc/0.jpg)](https://www.youtube.com/watch?v=hy_my0OQddc) 
-
 ### Contribution
 
 ### Enemy
