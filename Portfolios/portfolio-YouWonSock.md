@@ -35,9 +35,7 @@
 * 2021-08 ~ 2022-04 (about 9 months) - main development and build for the pc version
 * 2022-04 ~ now - build for the mobile version
 
-<b><h2>Contribution</h2></b> 
-
-### Contribution
+## Contribution
 
 ### Enemy
 * #### Entities
