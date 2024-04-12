@@ -105,7 +105,7 @@
     아이템 생성을 위한 클래스로 Stage내에 존재하는 몬스터들의 OnDeath 이벤트에  
     확률에 따라 아이템을 생성하는 메서드 OnEnemyDeath를 등록합니다. 
     <details>
-    <summary>Code</summary>
+    <summary>ItemManager Code</summary>
     <div markdown="1">
 
       ```c#
@@ -213,7 +213,7 @@
   * UIManager
     UI를 관리하는 Singleton오브젝트로 PlayerUI, GameObjectUI, PauseUI등의 Ui처리를 위한 매니저입니다.
     <details>
-    <summary>Code</summary>
+    <summary>UIManager Code</summary>
     <div markdown="1">
 
       ```c#
@@ -715,7 +715,7 @@
   * SaveManager
     세이브 데이터 관리
     <details>
-    <summary>Code</summary>
+    <summary>SaveManager Code</summary>
     <div markdown="1">
 
       ```c#
