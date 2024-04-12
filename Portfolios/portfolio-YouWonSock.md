@@ -906,6 +906,7 @@
 
 ### Player
   * 체력 및 사망처리
+    
     ![p](https://github.com/youwonsock/back-to-the-dungeon-scripts/assets/46276141/c4859e7c-fbd9-42fc-ad5a-27998173f67f)
 
 ### UI
