@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Smg: Weapon
 {
-    public GameObject bullet;
-    //public GameObject Fireposition;
 
     public bool repeaterCheck;
 
@@ -20,11 +18,11 @@ public class Smg: Weapon
                 audioSource.PlayOneShot(fireSound);
 
             onFire = false;
-            var tmp = Instantiate(bullet, Fireposition.transform.position, transform.rotation).GetComponent<Bullet>(); // ì´ì•Œ ì†Œí™˜
-            tmp.SetBullet(this.damage, Convert_V3ctor(), max_distance, true, Bullet.Target.Enemy); // ë°ë¯¸ì§€, íšŒì „, ìµœëŒ€ê±°ë¦¬ ë“± ì „ë‹¬
+            var tmp = Instantiate(bullet, Fireposition.transform.position, transform.rotation).GetComponent<Bullet>(); // ì´ì•Œ ?†Œ?™˜
+            tmp.SetBullet(this.damage, Convert_V3ctor(), max_distance, true, Bullet.Target.Enemy); // ?°ë¯¸ì??, ?šŒ? „, ìµœë??ê±°ë¦¬ ?“± ? „?‹¬
 
             if (repeaterCheck)
-                Invoke("Returntoture", attack_speed); //ì—°ì‚¬ ë¬´ê¸° ì¼ë•Œ í™œì„±í™”(ì£¼ì„ í•´ì œ) ë° attack_speed ì„¤ì •
+                Invoke("Returntoture", attack_speed); //?—°?‚¬ ë¬´ê¸° ?¼?•Œ ?™œ?„±?™”(ì£¼ì„ ?•´? œ) ë°? attack_speed ?„¤? •
 
             cur_Bullet--;
 
@@ -45,9 +43,9 @@ public class Smg: Weapon
 
     Vector3 Convert_V3ctor()
     {
-        float cur_recoil = UnityEngine.Random.Range(-recoil, recoil); // ë°˜ë™ê°’ ëœë¤ìœ¼ë¡œ ìƒì„±
+        float cur_recoil = UnityEngine.Random.Range(-recoil, recoil); // ë°˜ë™ê°? ?œ?¤?œ¼ë¡? ?ƒ?„±
         Vector3 vector3 = (Vector3)(Fireposition.transform.right); // ë°©í–¥ êµ¬í•¨
-        return (Quaternion.Euler(0f, 0f, cur_recoil) * vector3).normalized; // ë°˜ë™ì— ë”°ë¥¸ íšŒì „ í›„ ì •ê·œí™”
+        return (Quaternion.Euler(0f, 0f, cur_recoil) * vector3).normalized; // ë°˜ë™?— ?”°ë¥? ?šŒ? „ ?›„ ? •ê·œí™”
     }
 }
 

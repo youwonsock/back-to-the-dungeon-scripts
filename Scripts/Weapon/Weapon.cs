@@ -20,8 +20,8 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected AudioClip fireSound;
     [SerializeField] protected AudioClip reloadSound;
     protected AudioSource audioSource;
+    protected GameObject bullet;
     public GameObject Fireposition;
-
 
     protected ParticleSystem muzzleFlash;
     private float lastAttackTime;
@@ -29,8 +29,8 @@ public abstract class Weapon : MonoBehaviour
     private bool isReload;
 
     /// <summary>
-    /// ë°œì‚¬ ì²´í¬ í•¨ìˆ˜
-    /// ë§ˆìš°ìŠ¤ë¥¼ í´ë¦­í•˜ê³  í´ë¦­í•´ì œí•˜ê¸° ì „ê¹Œì§€ falseê°€ ë¨
+    /// ë°œì‚¬ ì²´í¬ ?•¨?ˆ˜
+    /// ë§ˆìš°?Š¤ë¥? ?´ë¦??•˜ê³? ?´ë¦??•´? œ?•˜ê¸? ? „ê¹Œì?? falseê°? ?¨
     /// </summary>
     [SerializeField] public bool onFire = true;
     protected Transform Transform;
@@ -41,7 +41,7 @@ public abstract class Weapon : MonoBehaviour
     }
 
     /// <summary>
-    /// PlayerInputì˜ Fireì˜ ê°’ì„ ë°˜í™˜í•˜ëŠ” í”„ë¡œí¼í‹°
+    /// PlayerInput?˜ Fire?˜ ê°’ì„ ë°˜í™˜?•˜?Š” ?”„ë¡œí¼?‹°
     /// </summary>
     public bool IsFire
     {
@@ -86,7 +86,7 @@ public abstract class Weapon : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        //ì´ì•Œìˆ˜ë¥¼ ë³´ì—¬ì£¼ëŠ” UI ì„¤ì •
+        //ì´ì•Œ?ˆ˜ë¥? ë³´ì—¬ì£¼ëŠ” UI ?„¤? •
         UIManager.Instance.SetBulletUI(cur_Bullet, max_Bullet);
 
         if (cur_Bullet == 0)
@@ -94,9 +94,9 @@ public abstract class Weapon : MonoBehaviour
     }
 
     /// <summary>
-    /// ë°œì‚¬ í•¨ìˆ˜ ê° ë¬´ê¸°ì˜ íŠ¹ì„±ì— ë§ê²Œ ì‘ì„±í•˜ë©´ ë¨
-    /// instantiateë¥¼ ì‚¬ìš©í•˜ì—¬ ì´ì•Œì„ ì†Œí™˜í•˜ëŠ” ì‹ìœ¼ë¡œ êµ¬í˜„
-    /// ì˜ˆì‹œ ì½”ë“œëŠ” Pistol.cs ì°¸ê³ 
+    /// ë°œì‚¬ ?•¨?ˆ˜ ê°? ë¬´ê¸°?˜ ?Š¹?„±?— ë§ê²Œ ?‘?„±?•˜ë©? ?¨
+    /// instantiateë¥? ?‚¬?š©?•˜?—¬ ì´ì•Œ?„ ?†Œ?™˜?•˜?Š” ?‹?œ¼ë¡? êµ¬í˜„
+    /// ?˜ˆ?‹œ ì½”ë“œ?Š” Pistol.cs ì°¸ê³ 
     /// </summary>
     public abstract void Fire();
 
@@ -117,7 +117,7 @@ public abstract class Weapon : MonoBehaviour
     }
 
 
-    //í˜„ì¬ ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ë©”ì„œë“œ
+    //?˜„?¬ ?‚¬?š©?˜ì§? ?•Š?Š” ë©”ì„œ?“œ
     public virtual void TempFire()
     {
         if (WeaponState == State.ReadyToFire)
@@ -133,10 +133,10 @@ public abstract class Weapon : MonoBehaviour
 
 
     /// <summary>
-    /// onFire ë³€ìˆ˜ ìƒíƒœ ë³€í™˜ í•¨ìˆ˜
-    /// í´ë¦­ ê°ì§€ìš©
-    /// í´ë¦­ì„ í•˜ê³  ìˆìœ¼ë©´ Falseë¥¼ ë°˜í™˜
-    /// í´ë¦­ì„ í•˜ì§€ ì•Šê³  ìˆìœ¼ë©´ Trueë¥¼ ë°˜í™˜í•¨
+    /// onFire ë³??ˆ˜ ?ƒ?ƒœ ë³??™˜ ?•¨?ˆ˜
+    /// ?´ë¦? ê°ì???š©
+    /// ?´ë¦??„ ?•˜ê³? ?ˆ?œ¼ë©? Falseë¥? ë°˜í™˜
+    /// ?´ë¦??„ ?•˜ì§? ?•Šê³? ?ˆ?œ¼ë©? Trueë¥? ë°˜í™˜?•¨
     /// </summary>
     public void ChangeState()
     {
@@ -144,18 +144,18 @@ public abstract class Weapon : MonoBehaviour
     }
 
     /// <summary>
-    /// ë§ˆìš°ìŠ¤ ì¸í’‹ ë¦¬í„´ ë©”ì†Œë“œ
+    /// ë§ˆìš°?Š¤ ?¸?’‹ ë¦¬í„´ ë©”ì†Œ?“œ
     /// </summary>
-    /// <returns>ë§ˆìš°ìŠ¤ ì¸í’‹</returns>
+    /// <returns>ë§ˆìš°?Š¤ ?¸?’‹</returns>
     public bool GetMouseInput()
     {
         return IsFire;
     }
 
     /// <summary>
-    /// ì¥ì „í•¨ìˆ˜
-    /// ê° ë¬´ê¸°ë§ˆë‹¤ ì„¤ì ˆëœ ì¥ì „ì‹œì¹¸ ì´í›„ì—
-    /// ì¥ì „ì´ ì™„ë£Œë˜ê²Œë” ë§Œë“¤ì–´ì ¸ìˆìŒ
+    /// ?¥? „?•¨?ˆ˜
+    /// ê°? ë¬´ê¸°ë§ˆë‹¤ ?„¤? ˆ?œ ?¥? „?‹œì¹? ?´?›„?—
+    /// ?¥? „?´ ?™„ë£Œë˜ê²Œë” ë§Œë“¤?–´? ¸?ˆ?Œ
     /// </summary>
     public virtual void Reload()
     {
@@ -193,8 +193,8 @@ public abstract class Weapon : MonoBehaviour
     }
 
     /// <summary>
-    /// ë§ˆìš°ìŠ¤ í´ë¦­ ì¤‘ì¼ ë•Œ onFireë¥¼ ë‹¤ì‹œ Trueë¡œ ë§Œë“¤ì–´ì£¼ëŠ” í•¨ìˆ˜
-    /// ì—°ì‚¬ë¬´ê¸° êµ¬í˜„ ë•Œ Invokeì™€ í•¨ê»˜ ì‚¬ìš©í•˜ë©´ ìœ ìš©
+    /// ë§ˆìš°?Š¤ ?´ë¦? ì¤‘ì¼ ?•Œ onFireë¥? ?‹¤?‹œ Trueë¡? ë§Œë“¤?–´ì£¼ëŠ” ?•¨?ˆ˜
+    /// ?—°?‚¬ë¬´ê¸° êµ¬í˜„ ?•Œ Invoke??? ?•¨ê»? ?‚¬?š©?•˜ë©? ?œ ?š©
     /// </summary>
     private void Returntoture()
     {

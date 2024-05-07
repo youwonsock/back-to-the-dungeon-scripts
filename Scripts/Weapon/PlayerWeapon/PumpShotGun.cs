@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PumpShotGun : Weapon
 {
-    public GameObject bullet; 
-    // public GameObject Fireposition;
 
     private int bulletshot=7;
     private bool playerPressMouse0;
@@ -25,8 +23,8 @@ public class PumpShotGun : Weapon
 
             for (int i = 0; i < bulletshot; i++)
             {
-                var tmp = Instantiate(bullet, Fireposition.transform.position, transform.rotation).GetComponent<Bullet>(); // ì´ì•Œ ì†Œí™˜
-                tmp.SetBullet(this.damage, Convert_V3ctor(z + (30 - i * 8)), max_distance, true, Bullet.Target.Enemy); // ë°ë¯¸ì§€, íšŒì „, ìµœëŒ€ê±°ë¦¬ ë“± ì „ë‹¬
+                var tmp = Instantiate(bullet, Fireposition.transform.position, transform.rotation).GetComponent<Bullet>(); // ì´ì•Œ ?†Œ?™˜
+                tmp.SetBullet(this.damage, Convert_V3ctor(z + (30 - i * 8)), max_distance, true, Bullet.Target.Enemy); // ?°ë¯¸ì??, ?šŒ? „, ìµœë??ê±°ë¦¬ ?“± ? „?‹¬
             }
 
             cur_Bullet--;
@@ -82,7 +80,7 @@ public class PumpShotGun : Weapon
     Vector3 Convert_V3ctor(float f)
     {
         Vector3 vector3 = (Vector3)(Fireposition.transform.right); // ë°©í–¥ êµ¬í•¨
-        return (Quaternion.Euler(0f, 0f, f) * vector3).normalized; // ë°˜ë™ì— ë”°ë¥¸ íšŒì „ í›„ ì •ê·œí™”
+        return (Quaternion.Euler(0f, 0f, f) * vector3).normalized; // ë°˜ë™?— ?”°ë¥? ?šŒ? „ ?›„ ? •ê·œí™”
     }
 
     protected override void Update()

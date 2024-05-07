@@ -1,0 +1,118 @@
+
+@startuml
+
+class UIManager <<singleton>>
+{
+    -UIObjects
+    
+    +UISettingFunction()
+}
+
+class Entity
+{
+    -int Health
+    -int MaxHealth
+
+    +event OnDeath
+
+    +virtual void Heal()
+    +virtual void TakeDamage()
+    -virtual void Die()
+}
+
+class Hero
+{
+    -float Stamina
+    -float MaxStamina
+}
+
+class ISaveable
+{
+    -string ID
+
+    +Object Save()
+    +void Load(Object loaded)
+}
+
+class SaveManager
+{
+    +static void Save(string fileName, SaveKey key)
+    +static void Load(string fileName, SaveKey key)
+
+    +static void Add(ISaveable saveable, SaveKey key)
+    +static void Remove(ISaveable saveable, SaveKey key)
+}
+
+class Weapon
+{
+    -weaponInfo
+
+    +abstract void Fire()
+    +virtual void Reload()
+}
+
+class PlayerWeapon
+{
+    +override void Fire()
+    +override void Reload()
+}
+
+class Bullet
+{
+    -float bulletSpeed
+    -float attackRange
+
+    +void SetBullet()
+    -virtual void Attack(Collider2D collision)
+    -virtual void OnTriggerEnter2D(Collider2D collision)
+}
+
+class ExplosionBullet
+{
+    -void OnTriggerEnter2D(Collider2D collision)
+}
+
+class Enemy
+{
+    -EnemyInfo
+    -Slider HealthBar
+
+    -override void Die()
+    -virtual void OnCollisionEnter2D(Collision2D collision)
+}
+
+class EnemyItemSpawner
+{
+    -List<ItemProperty> items
+
+    -OnEnemyDeath()    
+}
+
+class Item
+{
+    -ItemType itemType
+    -string itemName
+
+    +abstract void GetItem()
+    -void OnCollisionEnter2D(Collision2D collision)
+}
+
+class EnemyHealthBar
+{
+    -RectTransform rectTransform
+    -Enemy enemy
+}
+
+ISaveable <|-- Hero
+Entity <|-- Hero
+Entity <|-- Enemy
+EnemyHealthBar <-- Enemy
+
+Weapon <|-- PlayerWeapon
+Weapon <-- Bullet
+Bullet <|-- ExplosionBullet
+EnemyItemSpawner <-- Item
+
+SaveManager *-- ISaveable
+
+@enduml

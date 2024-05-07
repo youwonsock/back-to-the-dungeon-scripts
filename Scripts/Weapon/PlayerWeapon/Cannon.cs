@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Cannon : Weapon
 {
-    public GameObject bullet;
-  // public GameObject Fireposition;
 
     public override void Fire()
     {
@@ -19,8 +17,8 @@ public class Cannon : Weapon
                 audioSource.PlayOneShot(fireSound);
 
             onFire = false;
-            var tmp = Instantiate(bullet, Fireposition.transform.position, transform.rotation).GetComponent<ExplosionBullet>(); // ì´ì•Œ ì†Œí™˜
-            tmp.SetBullet(this.damage, Fireposition.transform.right, max_distance, false, Bullet.Target.Enemy); // ë°ë¯¸ì§€, íšŒì „, ìµœëŒ€ê±°ë¦¬ ë“± ì „ë‹¬
+            var tmp = Instantiate(bullet, Fireposition.transform.position, transform.rotation).GetComponent<ExplosionBullet>(); // ì´ì•Œ ?†Œ?™˜
+            tmp.SetBullet(this.damage, Fireposition.transform.right, max_distance, false, Bullet.Target.Enemy); // ?°ë¯¸ì??, ?šŒ? „, ìµœë??ê±°ë¦¬ ?“± ? „?‹¬
 
             cur_Bullet--;
 

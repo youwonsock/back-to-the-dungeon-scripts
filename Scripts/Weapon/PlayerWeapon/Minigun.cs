@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Minigun : Weapon
 {
-    public GameObject bullet;
-    // public GameObject Fireposition;
-
     [Header("SetOperatingTime")]
     [SerializeField] float overHeatingTime;
     [SerializeField] float idlingTime;
@@ -36,8 +33,8 @@ public class Minigun : Weapon
     {
         if (playerMovement && playerShooter)
         {
-            playerMovement.ChangeBasicSpeed += this.speedDifferences;          //playerì˜ ì´ë™ì†ë„ ì œí•œ      
-            //playerMovement.ChangeSpeed += 2.0f;          //playerì˜ ì´ë™ì†ë„ ì œí•œ
+            playerMovement.ChangeBasicSpeed += this.speedDifferences;          //player?˜ ?´?™?†?„ ? œ?•œ      
+            //playerMovement.ChangeSpeed += 2.0f;          //player?˜ ?´?™?†?„ ? œ?•œ
             playerUseMinigun = false;
         }
     }
@@ -53,11 +50,11 @@ public class Minigun : Weapon
                 audioSource.PlayOneShot(fireSound);
 
             onFire = false;
-            var tmp = Instantiate(bullet, Fireposition.transform.position, transform.rotation).GetComponent<Bullet>(); // ì´ì•Œ ì†Œí™˜
-            tmp.SetBullet(this.damage, Convert_V3ctor(), max_distance, true, Bullet.Target.Enemy); // ë°ë¯¸ì§€, íšŒì „, ìµœëŒ€ê±°ë¦¬ ë“± ì „ë‹¬
+            var tmp = Instantiate(bullet, Fireposition.transform.position, transform.rotation).GetComponent<Bullet>(); // ì´ì•Œ ?†Œ?™˜
+            tmp.SetBullet(this.damage, Convert_V3ctor(), max_distance, true, Bullet.Target.Enemy); // ?°ë¯¸ì??, ?šŒ? „, ìµœë??ê±°ë¦¬ ?“± ? „?‹¬
 
             if (repeaterCheck)
-                Invoke("Returntoture", attack_speed); //ì—°ì‚¬ ë¬´ê¸° ì¼ë•Œ í™œì„±í™”(ì£¼ì„ í•´ì œ) ë° attack_speed ì„¤ì •
+                Invoke("Returntoture", attack_speed); //?—°?‚¬ ë¬´ê¸° ?¼?•Œ ?™œ?„±?™”(ì£¼ì„ ?•´? œ) ë°? attack_speed ?„¤? •
 
             cur_Bullet--;
 
@@ -68,7 +65,7 @@ public class Minigun : Weapon
     }
 
 #if LEGACY
-    //ì—¬ê¸°ì— AddWeapon or ChangeWeaponì¸ì§€ ê²°ì •í•˜ëŠ” ì½”ë“œ ì‚½ì…ì˜ˆì •!
+    //?—¬ê¸°ì— AddWeapon or ChangeWeapon?¸ì§? ê²°ì •?•˜?Š” ì½”ë“œ ?‚½?…?˜ˆ? •!
     private void GetMinigun(byte idx)
     {
         try
@@ -93,9 +90,9 @@ public class Minigun : Weapon
         playerShooter = player.GetComponent<PlayerShooter>();
 
         float temp = playerMovement.ChangeBasicSpeed;
-        playerMovement.ChangeBasicSpeed -= 2.0f;          //playerì˜ ì´ë™ì†ë„ ì œí•œ      
+        playerMovement.ChangeBasicSpeed -= 2.0f;          //player?˜ ?´?™?†?„ ? œ?•œ      
         this.speedDifferences = Mathf.Round(temp - playerMovement.ChangeBasicSpeed);
-        //playerMovement.ChangeSpeed -= 2.0f;          //playerì˜ ì´ë™ì†ë„ ì œí•œ     
+        //playerMovement.ChangeSpeed -= 2.0f;          //player?˜ ?´?™?†?„ ? œ?•œ     
         playerUseMinigun = true;
     }
 
@@ -112,13 +109,13 @@ public class Minigun : Weapon
         if ( playerInput.Fire && !isOverheating)
         {
             time += Time.deltaTime;
-            if (time > overHeatingTime)                                   //ê³¼ì—´ ì‹œê°„
+            if (time > overHeatingTime)                                   //ê³¼ì—´ ?‹œê°?
             {
                 sprite.color = new Color(1, 0, 0, 1);
-                audioSource.PlayOneShot(reloadSound);                                       //reloadsoundë¥¼ ê³¼ì—´ì†Œë¦¬ë¡œ ëŒ€ì²´!
+                audioSource.PlayOneShot(reloadSound);                                       //reloadsoundë¥? ê³¼ì—´?†Œë¦¬ë¡œ ???ì²?!
                 isOverheating = true;
             }
-            else if (time > idlingTime)                              //ê³µíšŒì „ ì‹œê°„
+            else if (time > idlingTime)                              //ê³µíšŒ? „ ?‹œê°?
             {
                 onFire = true;
                 sprite.color = Color.Lerp(baseColor, Color.red, (time-idlingTime)/(overHeatingTime-idlingTime));
@@ -166,8 +163,8 @@ public class Minigun : Weapon
 
     Vector3 Convert_V3ctor()
     {
-        float cur_recoil = UnityEngine.Random.Range(-recoil, recoil); // ë°˜ë™ê°’ ëœë¤ìœ¼ë¡œ ìƒì„±
+        float cur_recoil = UnityEngine.Random.Range(-recoil, recoil); // ë°˜ë™ê°? ?œ?¤?œ¼ë¡? ?ƒ?„±
         Vector3 vector3 = (Vector3)(Fireposition.transform.right); // ë°©í–¥ êµ¬í•¨
-        return (Quaternion.Euler(0f, 0f, cur_recoil) * vector3).normalized; // ë°˜ë™ì— ë”°ë¥¸ íšŒì „ í›„ ì •ê·œí™”
+        return (Quaternion.Euler(0f, 0f, cur_recoil) * vector3).normalized; // ë°˜ë™?— ?”°ë¥? ?šŒ? „ ?›„ ? •ê·œí™”
     }
 }
