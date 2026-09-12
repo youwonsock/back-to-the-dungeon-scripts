@@ -1,325 +1,221 @@
-# Back to The Dungeon
+# Back to the Dungeon
 
-It's the first project of **Team UGD**. We've been interested in the development of the game system more than the game itself. So the game quality, especially with regards to assets(e.g. graphics, motions, level design, ui, etc), may be rather low but it's really happy for us to implement most of game systems by our own efforts. We share scripts here used for "Back to The Dungeon" project.
+Unity 기반 2D 플랫폼 슈팅 게임에서 전투, 적 패턴, 아이템, UI, 저장 시스템을 구현한 팀 포트폴리오 프로젝트입니다.
 
-### Portfolios
+> 이 저장소는 완전한 Unity 프로젝트가 아니라 프로젝트에서 사용한 C# 스크립트와 UML을 공개한 저장소입니다.
 
-If you're interested in individual portfolios, click the below links.
+## 목차
 
-* [DevSlem](Portfolios/portfolio-DevSlem.md)
-* [KoHyeonSeo](Portfolios/portfolio-KoHyeonSeo.md)
-* [YouWonSock](Portfolios/portfolio-YouWonSock.md)
+- [프로젝트 개요](#프로젝트-개요)
+- [프로젝트 요약](#프로젝트-요약)
+- [담당 범위](#담당-범위)
+- [사용 기술](#사용-기술)
+- [클래스 구조 UML](#클래스-구조-uml)
+- [기능 상세](#기능-상세)
+- [실행 및 확인](#실행-및-확인)
 
-## Game
+## 프로젝트 개요
 
-### Game trailer - Youtube
+| 항목 | 내용 |
+| --- | --- |
+| 개발 형태 | Team UGD 팀 프로젝트 |
+| 개발자 | 유원석 (You Won Sock) |
+| GitHub | [youwonsock](https://github.com/youwonsock) |
+| 이메일 | qazwsx233434@gmail.com |
+| 개발 기간 | 2021.09 ~ 2022.03 |
+| 프로젝트 목적 | Unity 2D 액션 게임의 전투·적 패턴·아이템·UI·저장 시스템 설계 및 구현 |
+| 장르 | 2D 플랫폼 슈팅 |
+| 플랫폼 | Windows |
+| 개발 언어 | C# 7.2 |
+| 게임 엔진 | Unity 2020.3.14f1 |
+| 런타임 | .NET Standard 2.0 |
+| 외부 라이브러리 | A* Pathfinding Project 4.2.15 |
 
-[![Back to The Dungeon Trailer](https://img.youtube.com/vi/hy_my0OQddc/0.jpg)](https://www.youtube.com/watch?v=hy_my0OQddc) 
+## 프로젝트 요약
 
-### Downloads
+Back to the Dungeon은 여러 종류의 총기와 적 패턴을 활용해 스테이지를 진행하는 2D 플랫폼 슈팅 게임입니다. 공통 시스템을 추상 클래스와 인터페이스로 구성하고, 이벤트와 코루틴을 이용해 전투·아이템·UI·저장 기능을 연결했습니다.
 
-* [itch.io](https://devslem.itch.io/back-to-the-dungeon)
+주요 실행 흐름은 다음과 같습니다.
 
-### Genres
+1. `PlayerInput`과 `PlayerMovement`가 입력과 이동을 처리합니다.
+2. `PlayerShooter`가 무기 슬롯, 조준, 발사, 재장전, 무기 교체를 조정합니다.
+3. `Weapon` 파생 클래스와 `Bullet`이 무기별 발사 방식과 충돌 피해를 처리합니다.
+4. `EnemyDetection`, `EnemyPathfinder`, `EnemyAttacker`가 탐지·이동·스킬 실행을 담당합니다.
+5. `Entity.OnDeath` 이벤트를 통해 사망 처리, UI 갱신, 아이템 드롭을 연결합니다.
+6. `SaveManager`가 `ISaveable` 구현 객체의 플레이어·무기·설정 데이터를 저장하고 불러옵니다.
 
-2D platformer shooting
+- [게임 트레일러](https://www.youtube.com/watch?v=hy_my0OQddc)
+- [itch.io 다운로드](https://devslem.itch.io/back-to-the-dungeon)
+- [개인 구현 기록](Portfolios/portfolio-YouWonSock.md)
 
-### Platforms
+## 담당 범위
 
-<p>
-<img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Windows_logo_-_2012.png" height="30">
-<!--<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Android_logo_2019_%28stacked%29.svg/640px-Android_logo_2019_%28stacked%29.svg.png" width="40">-->
-</p>
+이 저장소에는 팀 전체가 작성한 스크립트가 포함되어 있습니다. 아래 항목은 유원석이 담당한 주요 구현입니다.
 
-## Project
+- 플레이어 체력, 피격, 사망, 부활, 무적 상태 처리
+- 무기 공통 구조와 권총·소총·산탄총·저격총·미니건·대포 등 9종의 발사 로직
+- 무기 슬롯 추가·교체·전환 및 저장 데이터 연동
+- 자폭형·비행형·돌진형 몬스터와 보스 탄막 스킬
+- 필드 아이템, 상점 아이템, 가중치 기반 아이템 드롭
+- HUD, 일시정지, 설정, 보스 체력, 무기 슬롯 UI
+- `ISaveable` 기반 플레이어·무기·설정 데이터 저장 시스템
+- 문·스위치 및 보스 이벤트 트리거 등 상호작용 오브젝트
 
-### Development kits
+## 사용 기술
 
-We've used **C#** and **Unity** game engine.
+### Unity
 
-<p>
-<img src="https://w.namu.la/s/a5c8b52bd00f38f3430dd7540867240527fd91e023abc9ff5afc7612faaf0ff3d089ebc7d17fd742323e15a32383753a3777de02ec664a6e15b0e92847220dc47f2be0a379d83dfb0a437a75ee6b2f63e63bbc1106ffb05877c5ccac54f45b22" height="40">
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Unity_Technologies_logo.svg/1280px-Unity_Technologies_logo.svg.png" height="40">
-</p>
+`MonoBehaviour`, `ScriptableObject`, Coroutine, `Rigidbody2D`, Physics2D, UGUI, TextMeshPro, 2D IK, SceneManager를 사용해 게임플레이와 UI를 구현했습니다.
 
-### Periods
+### C#
 
-* 2021-09 ~ 2022-03
+추상 클래스와 인터페이스로 공통 동작을 정의하고, 이벤트·제네릭 컬렉션·LINQ·직렬화를 이용해 시스템 간 데이터를 연결했습니다.
 
-## Scripts overview
+### A* Pathfinding Project
 
-### Environments
+2D 플랫폼 환경에서 적의 이동 경로를 탐색하는 데 A* Pathfinding Project를 사용했습니다. 라이브러리 파일은 이 저장소에 포함되어 있지 않습니다.
 
-* C# 7.2
-* .Net Standard 2.0
-* Unity Editor 2020.3.14f1
+## 클래스 구조 UML
 
-### External Libraries
+클래스 구조 원본은 [`UML.plantuml`](UML.plantuml)에서 확인할 수 있습니다.
 
-> Note that library files are not included in this project.
+- `Entity`는 체력·피해·사망 이벤트를 제공하며 `Hero`와 `Enemy`의 기반이 됩니다.
+- `Hero`와 `PlayerShooter`는 `ISaveable`을 구현해 플레이어 상태와 무기 구성을 저장합니다.
+- `Weapon`은 발사·재장전의 공통 규칙을 정의하고 각 무기 클래스가 발사 방식을 구체화합니다.
+- `Bullet`과 파생 클래스는 이동, 충돌, 피해 및 폭발 동작을 처리합니다.
+- `EnemyAttacker`는 조건에 맞는 `EnemySkill`을 실행하고 몬스터 클래스가 애니메이션과 상태를 조정합니다.
+- `ItemManager`는 `Entity.OnDeath`를 구독해 설정된 가중치에 따라 아이템을 생성합니다.
+- `UIManager`는 플레이어 상태, 무기 슬롯, 일시정지와 설정 화면을 통합 관리합니다.
+- `SaveManager`는 등록된 `ISaveable` 객체의 데이터를 파일 단위로 저장하고 복원합니다.
 
-* [A* Pathfinding](https://arongranberg.com/astar/) - version: 4.2.15
+> UML 이미지 플레이스홀더 — `UML.plantuml`을 이미지로 렌더링한 뒤 이 위치에 추가
 
-### Implemented systems
+## 기능 상세
 
-We've implemented most of game systems using only basic libraries provided by C# and Unity. [A* Pathfinding](https://arongranberg.com/astar/) as external library has been only used.
+### 무기 및 무기 슬롯 시스템
 
-#### Entity
+**목적**
 
-* Health
-* Damage
+서로 다른 발사 특성을 가진 무기를 공통 구조로 관리하고, 플레이어가 제한된 슬롯 안에서 무기를 획득·교체·전환할 수 있도록 합니다.
 
-#### Player
+**핵심 구현**
 
-* Input
-* Movement
-* Attack(shooting)
+- [`Weapon`](Scripts/Weapon/Weapon.cs)이 공격력, 사거리, 탄창, 연사 간격, 재장전의 공통 상태를 관리합니다.
+- [`PlayerShooter`](Scripts/Player/PlayerShooter.cs)가 1~5개의 무기 슬롯과 현재 무기, 조준 및 발사 가능 상태를 관리합니다.
+- 슬롯 추가·교체 시 게임 오브젝트와 UI를 함께 갱신합니다.
+- 무기 종류별 파생 클래스에서 단발, 연사, 점사, 산탄, 폭발 등 발사 방식을 구체화합니다.
+- 무기 슬롯과 현재 무기 정보는 저장 시스템과 연동됩니다.
 
-#### Enemy
+> 스크린샷 플레이스홀더 — 무기 발사 및 슬롯 전환 화면
 
-* Target Detection
-* Movement
-* Pathfinding(We use [A* Pathfinding](https://arongranberg.com/astar/) asset and implement our own pathfinding logic by using its API in the 2D platformer game.)
-* Attack(by using skills)
+### 적 캐릭터 및 공격 패턴
 
-#### Weapon
+**목적**
 
-* Guns
-* Bullets
-* Melee Weapon(only used for enemies)
+몬스터마다 탐지·이동·공격 패턴을 조합해 서로 다른 전투 경험을 제공합니다.
 
-#### Skill
+**핵심 구현**
 
-We've implemented a lot of skills. Skill is only used by enemies.  
+- `EnemyDetection`과 `EnemyPathfinder`가 플레이어 탐지와 경로 이동을 처리합니다.
+- 자폭형 `Astronaut`는 타깃을 추적하며, 플레이어를 감지한 상태에서 사망하면 폭탄을 생성합니다.
+- `Squirrel`은 스킬 발동 시 일반 이동과 경로 탐색을 잠시 중단하고 플레이어 방향으로 돌진합니다.
+- 돌진 중 낭떠러지를 감지하면 설정에 따라 진행 방향을 반전합니다.
+- `BossSpreadSkill`은 네 방향의 투사체 각도를 계속 회전시켜 탄막 패턴을 만듭니다.
 
-#### Item
+> 스크린샷 플레이스홀더 — 자폭형·돌진형 몬스터와 보스 탄막 패턴
 
-It's only used for the player.
+### 아이템 및 가중치 드롭
 
-* Item
-* Item Spawner
+**목적**
 
-#### UI
-
-* HUD
-* Game Start UI
-* Store
-* Setting
-* Game Data
-
-#### Manager
-
-* Game Manager
-* UI Manager
-
-#### Game Object
-
-We've implemented a lot of interactive game objects like portal, trap, etc.
-
-#### Save System
-
-* Manager(only serves API)
-* Listener(interface for synchronization)
-
-#### Utility
-
-* Physics
-* Math
-* Singleton
-* Attributes(for unity editor)
-
-### Feedback
-
-* Should have planned the system thoroughly in advance
-* Poor exception control
-* Lack of modularization 
-* Lack of using unity basic components
-* Poor skill system
-* Lack of polymorphism
-* Lack of interfaces
-* Lack of events
-* Poor weapon system
-* Lack of code documentation
-* Didn't use asynchronous programming with `async` and `await`
-* Should have considered the extension of input devices
-* Poor management of scripts
-* Poor management of log messages
-* Poor management of directories, project structure
-* Bad git version management
-* Poor organization of objects in unity scene
-
-<!-- ## 스크립트 개요  
-
-작성한 스크립트가 아래보다 더 많이 추가되어 더이상 기록하지는 못했음.
-
-### 작성할 스크립트 분류 개요  
-
-* [**Utility**](#utility)
-* [**Manager**](#manager)
-* [**Interface**](#interface)
-* [**Entity**](#entity)
-* [**Player**](#player)
-* [**Enemy**](#enemy)
-* [**Enemy Entity**](#enemy-entity)
-* [**Enemy Skills**](#enemy-skills)
-* [**Weapon**](#weapon)
-* [**Item**](#item)
-* [**Other Objects**](#other-objects)
-
-#### Utility  
-BezierMoveTool : IList\<BezierPath2> - class  [`kgmslem`](https://github.com/kgmslem)  
-BezierMoveToolEditor : Editor - class  [`kgmslem`](https://github.com/kgmslem)  
-ExtensionMethods - static class  [`kgmslem`](https://github.com/kgmslem)  
-MoveToolAttribute : PropertyAttribute - class  [`kgmslem`](https://github.com/kgmslem)  
-MoveToolAvailableAttribute : PropertyAttribute - class  [`kgmslem`](https://github.com/kgmslem)  
-MoveToolDrawer : PropertyDrawer - class  [`kgmslem`](https://github.com/kgmslem)  
-MoveToolEditor : Editor - class  [`kgmslem`](https://github.com/kgmslem)  
-PhysicsUtility - static class  [`kgmslem`](https://github.com/kgmslem)  
-ReflectionExtension - static class  [`kgmslem`](https://github.com/kgmslem)  
-SaveSystem - static class  [`kgmslem`](https://github.com/kgmslem)  
-ScenePopupAttribute : PropertyAttribute - class  [`kgmslem`](https://github.com/kgmslem)  
-ScenePopupDrawer : PropertyDrawer - class  [`kgmslem`](https://github.com/kgmslem)  
-SerializableDictionary : Dictionary - class  [`kgmslem`](https://github.com/kgmslem)  
-Singleton - abstract class  [`kgmslem`](https://github.com/kgmslem)  
-
-#### Manager  
-FixedResolution - class  [`kgmslem`](https://github.com/kgmslem)  
-GameManager : Singleton - class  [`kgmslem`](https://github.com/kgmslem)  
-UIManager : Singleton - class  [`youwonsock`](https://github.com/youwonsock)  
-ItemManager - class  [`youwonsock`](https://github.com/youwonsock)  
-
-#### Interface
-IAttackTime - interface  [`kgmslem`](https://github.com/kgmslem)  
-IFade - interface  [`kgmslem`](https://github.com/kgmslem)  
-ISkillFirePosition - interface  [`kgmslem`](https://github.com/kgmslem)  
-IStrikingPower - interface  [`kgmslem`](https://github.com/kgmslem)  
-
-#### Entity
-Attacker - abstract class  [`kgmslem`](https://github.com/kgmslem)  
-Enemy : Entity, IStrikingPower - abstract class  [`kgmslem`](https://github.com/kgmslem)  
-Entity - abstract class  [`kgmslem`](https://github.com/kgmslem)  
-
-#### Player
-Hero : Entity - class  [`youwonsock`](https://github.com/youwonsock)  
-PlayerInput - class  [`kgmslem`](https://github.com/kgmslem)  
-PlayerMovement - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-PlayerShooter - class  [`kgmslem`](https://github.com/kgmslem)  [`youwonsock`](https://github.com/youwonsock)  
-PlayerSingleton : Singleton - class  [`kgmslem`](https://github.com/kgmslem)  
-
-#### Enemy 
-AttackTrap : IStrikingPower - class  [`kgmslem`](https://github.com/kgmslem)  
-EnemyAttacker - class  [`kgmslem`](https://github.com/kgmslem)  
-EnemyAttackerEditor : Editor - class  [`kgmslem`](https://github.com/kgmslem)  
-EnemyDetection - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-EnemyPathfinder - class  [`kgmslem`](https://github.com/kgmslem)  
-EnemyPathfinderEditor : Editor - class  [`kgmslem`](https://github.com/kgmslem)  
-EnemySkillCondition - class  [`kgmslem`](https://github.com/kgmslem)  
-EnemyHealthBar - class  [`youwonsock`](https://github.com/youwonsock)  
-FlyBasicMovement - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-FlyFollowState - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-FlyReadyState - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-WalkBasicMovement - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-WalkFollowState - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-WalkReadyState - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-
-#### Enemy Entity
-Beez : Enemy - class  [`jihyeong4565`](https://github.com/jihyeong4565)  
-Boss : Enemy - class  [`kgmslem`](https://github.com/kgmslem)  
-BringerOfDeath : Enemy - class  [`kgmslem`](https://github.com/kgmslem)  
-FlyingEye : Enemy - class  [`kgmslem`](https://github.com/kgmslem)  
-Ninja : Enemy - class  [`kgmslem`](https://github.com/kgmslem)  
-Squirrel : Enemy - class  [`youwonsock`](https://github.com/youwonsock)  
-Wizard : Enemy - class  [`kgmslem`](https://github.com/kgmslem)  
-Zombie : Enemy - class [`kgmslem`](https://github.com/kgmslem)  
-
-#### Enemy Skills  
-Assassination : EnemySkill - class  [`kgmslem`](https://github.com/kgmslem)  
-BigBallSkill : EnemySkill - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-BodyStatBuff : EnemySkill - class  [`kgmslem`](https://github.com/kgmslem)  
-Bomb - class  [`youwonsock`](https://github.com/youwonsock)  
-BossLaser : EnemySkill - class  [`youwonsock`](https://github.com/youwonsock)  
-BossSmashSkill : EnemySkill - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-BossSpreadSkill : EnemySkill - class  [`youwonsock`](https://github.com/youwonsock)  
-CloseAttackSkill : EnemySkill - class  [`kgmslem`](https://github.com/kgmslem)  
-DashSkill : EnemySkill - class  [`youwonsock`](https://github.com/youwonsock)  
-DoubleSwordSwing : SwordSwing - class  [`kgmslem`](https://github.com/kgmslem)  
-EnemySkill : ScriptableObject - abstract class  [`kgmslem`](https://github.com/kgmslem)  
-GrabSkill : EnemySkill - class  [`kgmslem`](https://github.com/kgmslem)  
-NinjaSequentialShuriken : SequentialProjectileFire - class  [`kgmslem`](https://github.com/kgmslem)  
-RangedAutoAttack : EnemySkill, ISkillFirePosition - class  [`kgmslem`](https://github.com/kgmslem)    
-SelfExplosion - class  [`youwonsock`](https://github.com/youwonsock)  
-SequentialProjectileFire : EnemySkill, ISkillFirePosition - class  [`kgmslem`](https://github.com/kgmslem)  
-SickleGrab : EnemySkill - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-SingleSwordSwing : SwordSwing - class  [`kgmslem`](https://github.com/kgmslem)  
-SpellSkill : EnemySkill - class  [`kgmslem`](https://github.com/kgmslem)  
-SpreadSkill : EnemySkill - class  [`youwonsock`](https://github.com/youwonsock)   
-SwordSwing : EnemySkill - class  [`kgmslem`](https://github.com/kgmslem)  
-ThrowBoomerang : EnemySkill, ISkillFirePosition  [`kgmslem`](https://github.com/kgmslem)  
-ThrowRotatedSword : EnemySkill, ISkillFirePosition  [`kgmslem`](https://github.com/kgmslem)  
-TripleShuriken : EnemySkill, ISkillFirePosition - class  [`kgmslem`](https://github.com/kgmslem)  
-
-#### Weapon  
-AssaultRifle : Weapon - class  [`youwonsock`](https://github.com/youwonsock)  
-AutoShotGun : Weapon - class  [`youwonsock`](https://github.com/youwonsock)  
-AWP : Weapon - class  [`youwonsock`](https://github.com/youwonsock)  
-Ball : Entity - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)   
-BossHand - class  [`kgmslem`](https://github.com/kgmslem)  
-BringerOfDeathSpell - class  [`kgmslem`](https://github.com/kgmslem)  
-BringerOfDeathSword : MeleeWeapon - class  [`kgmslem`](https://github.com/kgmslem)  
-Bullet - class  [`gisu1102`](https://github.com/gisu1102)   
-BurstRifle : Weapon - class  [`youwonsock`](https://github.com/youwonsock)  
-Cannon : Weapon - class  [`youwonsock`](https://github.com/youwonsock)  
-Explosion - class  [`youwonsock`](https://github.com/youwonsock)  
-ExplosionBullet : Bullet - class  [`youwonsock`](https://github.com/youwonsock)  
-GrabbingSickle - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-MeleeWeapon - abstract class  [`kgmslem`](https://github.com/kgmslem)  
-Minigun : Weapon - class  [`youwonsock`](https://github.com/youwonsock)  
-PumpShotGun : Weapon - class  [`youwonsock`](https://github.com/youwonsock)  
-Pistol : Weapon - class  [`youwonsock`](https://github.com/youwonsock)  
-ReapingHook : MeleeWeapon, IAttackTime, IFade - class  [`kgmslem`](https://github.com/kgmslem)  
-Smg : Weapon - class  [`youwonsock`](https://github.com/youwonsock)  
-Weapon - abstract class  [`youwonsock`](https://github.com/youwonsock)  
-WeaponChangeInfo : ScriptableObject - class  [`kgmslem`](https://github.com/kgmslem)  
-
-
-#### Item  
-Item - abstract class  [`youwonsock`](https://github.com/youwonsock)  
-Coin : Item - class  [`youwonsock`](https://github.com/youwonsock)  
-HealPotion : Item - class  [`youwonsock`](https://github.com/youwonsock)  
-
-#### Other Objects  
-AlwaysUseablePortal - class  [`youwonsock`](https://github.com/youwonsock)  
-BgmPlayer - class  [`kgmslem`](https://github.com/kgmslem)  
-ChapterClear - class  [`kgmslem`](https://github.com/kgmslem)  
-DeadZone - class  [`kgmslem`](https://github.com/kgmslem)  
-DisableOnEntityDeath - class  [`kgmslem`](https://github.com/kgmslem)  
-DownPlatform - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-EndingCredit - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-EnemyStealthZone - class  [`kgmslem`](https://github.com/kgmslem)  
-FallingObject - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-FullScreenBackground - class  [`kgmslem`](https://github.com/kgmslem)  
-GameObjectGenerator - class  [`kgmslem`](https://github.com/kgmslem)  
-LinearMovableObject - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-MovableGroundTrap - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-MovingGround - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-MoveToCustomPoint - class  [`youwonsock`](https://github.com/youwonsock)  
-NonLinearMovableObject - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-PassableObject - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo) 
-PlayerRestrictionArea - class  [`kgmslem`](https://github.com/kgmslem)   
-Portal - class  [`jihyeong4565`](https://github.com/jihyeong4565), [`kgmslem`](https://github.com/kgmslem)  
-RandomPosition - class  [`kgmslem`](https://github.com/kgmslem)  
-RandomSpawner - class  [`kgmslem`](https://github.com/kgmslem)    
-Rotator - class  [`kgmslem`](https://github.com/kgmslem)  
-RecordBoard - class  [`KoHyeonSeo`](https://github.com/KoHyeonSeo)  
-SaveArea - class  [`kgmslem`](https://github.com/kgmslem)  
-Stage8DissolveEventTrigger - class  [`kgmslem`](https://github.com/kgmslem)  
-Stage8FlameEventTrigger - class  [`kgmslem`](https://github.com/kgmslem)  
-Stage8PortalEventTrigger - class  [`kgmslem`](https://github.com/kgmslem)  
-Store - class  [`kgmslem`](https://github.com/kgmslem)  
-StoreEditor : Editor - class  [`kgmslem`](https://github.com/kgmslem)  
-StoreItemCountControl - class  [`kgmslem`](https://github.com/kgmslem)  
-StoreItemSlot - class  [`kgmslem`](https://github.com/kgmslem)  
-StoreUI - class  [`kgmslem`](https://github.com/kgmslem)  
-TextMeshController - class  [`youwonsock`](https://github.com/youwonsock)  
-UpdatePathfinderGraph - class  [`kgmslem`](https://github.com/kgmslem)  
- -->
+몬스터 처치 보상과 상점 강화를 하나의 아이템 계층으로 관리합니다.
+
+**핵심 구현**
+
+- [`Item`](Scripts/Item/Item.cs)이 플레이어 충돌과 획득 처리의 공통 흐름을 정의합니다.
+- 코인, 회복, 무적 아이템과 최대 체력·스태미나·무기 슬롯·부활 강화 아이템을 파생 클래스로 구현했습니다.
+- [`ItemManager`](Scripts/Manager/ItemManager.cs)가 스테이지의 적을 조회하고 `OnDeath` 이벤트에 드롭 처리를 등록합니다.
+- 각 아이템의 가중치 합을 기준으로 누적 확률을 계산해 보상을 선택합니다.
+
+> 스크린샷 플레이스홀더 — 필드 아이템 획득 및 상점 강화 화면
+
+### 플레이어 상태와 부활
+
+**목적**
+
+체력, 스태미나, 피격, 사망, 잔여 생명과 부활 아이템을 일관된 플레이 흐름으로 연결합니다.
+
+**핵심 구현**
+
+- [`Entity`](Scripts/Entity/Entity.cs)의 체력·피해·사망 이벤트를 [`Hero`](Scripts/Player/Hero.cs)가 확장합니다.
+- 피격 시 넉백, 이동 제한, 애니메이션과 일시적 무적 상태를 처리합니다.
+- 사망 시 잔여 생명과 UI를 갱신하고 재시작 흐름으로 연결합니다.
+- 부활 아이템 보유 시 사망 처리 대신 일정 시간 후 체력을 회복하고 무적 상태로 복귀합니다.
+- 체력, 최대 체력, 최대 스태미나, 부활 여부와 잔여 생명을 저장 데이터로 변환합니다.
+
+> 스크린샷 플레이스홀더 — 플레이어 피격·사망·부활 화면
+
+### UI 통합 관리
+
+**목적**
+
+플레이어 HUD와 게임 진행 UI를 중앙에서 갱신하고, 중첩 화면의 열기·닫기 흐름을 관리합니다.
+
+**핵심 구현**
+
+- [`UIManager`](Scripts/Manager/UIManager.cs)를 Singleton으로 구성했습니다.
+- 체력, 스태미나, 탄약, 코인, 잔여 적, 잔여 생명, 보스 체력을 갱신합니다.
+- 보유 무기에 따라 슬롯 이미지를 생성·교체하고 현재 무기를 강조합니다.
+- Stack을 이용해 일시정지와 설정 화면의 이전 UI 상태를 복원합니다.
+- Scene 로드 이벤트와 연동해 시작 화면과 인게임 HUD를 전환합니다.
+
+> 스크린샷 플레이스홀더 — HUD, 무기 슬롯, 일시정지 및 설정 화면
+
+### 저장 시스템
+
+**목적**
+
+저장 대상이 자신의 데이터 생성과 복원을 담당하게 하여 플레이어·무기·설정 데이터를 공통 방식으로 처리합니다.
+
+**핵심 구현**
+
+- [`ISaveable`](Scripts/Save%20System/ISaveable.cs)이 식별자, 저장 데이터 생성, 로드 동작을 정의합니다.
+- [`SaveManager`](Scripts/Save%20System/SaveManager.cs)가 `SaveKey`별 저장 대상 목록을 관리합니다.
+- 저장 시 등록 객체의 타입·ID·직렬화 데이터를 수집하고, 로드 시 타입과 ID가 일치하는 객체에 전달합니다.
+- `TemporarySaveScope`로 임시 저장 후 복원·삭제하는 범위를 제공합니다.
+
+> 이 코드는 2021~2022년 프로젝트 당시의 구현을 보존한 것으로, 현재 환경에서는 보안상 사용이 권장되지 않는 `BinaryFormatter`를 포함합니다.
+
+> 스크린샷 플레이스홀더 — 저장·불러오기 결과 화면
+
+### 문과 스위치 상호작용
+
+**목적**
+
+플레이어 입력과 스테이지 상태에 따라 문 또는 은폐 플랫폼을 동작시키는 상호작용을 제공합니다.
+
+**핵심 구현**
+
+- [`Switch`](Scripts/Other%20Objects/Interation%20Objects/Switch.cs)가 플레이어의 상호작용 입력을 감지합니다.
+- 특정 적을 활성화 조건으로 지정하면 해당 적의 `OnDeath` 이벤트 이후 스위치가 나타납니다.
+- [`Door`](Scripts/Other%20Objects/Interation%20Objects/Door.cs)는 코루틴과 보간을 이용해 문을 정해진 시간 동안 이동시킵니다.
+- 동작 완료 후 스위치의 충돌을 비활성화해 중복 실행을 방지합니다.
+
+> 스크린샷 플레이스홀더 — 스위치 조작과 문 개방 화면
+
+## 실행 및 확인
+
+### 저장소 범위
+
+이 저장소에는 Unity 프로젝트의 `Assets`, `Packages`, `ProjectSettings` 전체가 포함되어 있지 않아 단독으로 빌드하거나 실행할 수 없습니다. 코드는 포트폴리오 검토와 구현 구조 확인을 위한 자료입니다.
+
+### 코드 확인
+
+- 전체 스크립트: [`Scripts`](Scripts)
+- 클래스 구조: [`UML.plantuml`](UML.plantuml)
+- 개인 구현 상세: [`Portfolios/portfolio-YouWonSock.md`](Portfolios/portfolio-YouWonSock.md)
+
+### 게임 확인
+
+- [YouTube 트레일러](https://www.youtube.com/watch?v=hy_my0OQddc)
+- [itch.io 배포 페이지](https://devslem.itch.io/back-to-the-dungeon)
