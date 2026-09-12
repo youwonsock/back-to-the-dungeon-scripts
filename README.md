@@ -88,7 +88,7 @@ Back to the Dungeon은 여러 종류의 총기와 적 패턴을 활용해 스테
 - `UIManager`는 플레이어 상태, 무기 슬롯, 일시정지와 설정 화면을 통합 관리합니다.
 - `SaveManager`는 등록된 `ISaveable` 객체의 데이터를 파일 단위로 저장하고 복원합니다.
 
-> UML 이미지 플레이스홀더 — `UML.plantuml`을 이미지로 렌더링한 뒤 이 위치에 추가
+<img src="Docs/Images/class-structure.png" alt="Back to the Dungeon 핵심 클래스 구조 UML" width="85%">
 
 ## 기능 상세
 
@@ -106,7 +106,45 @@ Back to the Dungeon은 여러 종류의 총기와 적 패턴을 활용해 스테
 - 무기 종류별 파생 클래스에서 단발, 연사, 점사, 산탄, 폭발 등 발사 방식을 구체화합니다.
 - 무기 슬롯과 현재 무기 정보는 저장 시스템과 연동됩니다.
 
-> 코드 샘플 플레이스홀더 — `PlayerShooter`의 슬롯 전환과 `Weapon`의 발사·재장전 흐름
+**핵심 코드**
+
+[`PlayerShooter`](Scripts/Player/PlayerShooter.cs)는 슬롯 유효성과 교체 가능 상태를 확인한 뒤 코루틴으로 무기를 전환합니다. [`Weapon`](Scripts/Weapon/Weapon.cs)은 재장전 중복을 차단하고, 대기 시간이 끝나면 탄창과 상태를 복원합니다.
+
+~~~csharp
+// PlayerShooter.cs
+public void SwapWeapon(byte slotIndex)
+{
+    if (!CanSwap)
+        return;
+
+    if (slotIndex < weaponSlot.Count &&
+        weaponSlot[slotIndex] != weapon &&
+        weaponSlot[slotIndex] != null)
+    {
+        StartCoroutine(SwapWeaponDelay(weaponSlot[slotIndex]));
+    }
+}
+
+// Weapon.cs
+public virtual void Reload()
+{
+    if (WeaponState == State.Reloading || cur_Bullet >= max_Bullet)
+        return;
+
+    IsReload = true;
+    StartCoroutine(IEReload());
+}
+
+protected IEnumerator IEReload()
+{
+    WeaponState = State.Reloading;
+    yield return new WaitForSeconds(reload_time);
+
+    IsReload = false;
+    cur_Bullet = max_Bullet;
+    WeaponState = State.ReadyToFire;
+}
+~~~
 
 ### 적 캐릭터 및 공격 패턴
 
@@ -122,7 +160,7 @@ Back to the Dungeon은 여러 종류의 총기와 적 패턴을 활용해 스테
 - 돌진 중 낭떠러지를 감지하면 설정에 따라 진행 방향을 반전합니다.
 - `BossSpreadSkill`은 네 방향의 투사체 각도를 계속 회전시켜 탄막 패턴을 만듭니다.
 
-> UML 플레이스홀더 — `EnemyDetection` → `EnemyPathfinder` → `EnemyAttacker` → `EnemySkill` 실행 관계
+<img src="Docs/Images/enemy-skill-flow.png" alt="적 탐지와 스킬 실행 흐름 UML" width="85%">
 
 ### 아이템 및 가중치 드롭
 
@@ -137,7 +175,43 @@ Back to the Dungeon은 여러 종류의 총기와 적 패턴을 활용해 스테
 - [`ItemManager`](Scripts/Manager/ItemManager.cs)가 스테이지의 적을 조회하고 `OnDeath` 이벤트에 드롭 처리를 등록합니다.
 - 각 아이템의 가중치 합을 기준으로 누적 확률을 계산해 보상을 선택합니다.
 
-> 코드 샘플 플레이스홀더 — `OnDeath` 이벤트 구독과 가중치 기반 아이템 선택 로직
+**핵심 코드**
+
+[`ItemManager`](Scripts/Manager/ItemManager.cs)는 적의 사망 이벤트를 구독하고, 누적 가중치 방식으로 생성할 아이템을 선택합니다.
+
+~~~csharp
+private void Awake()
+{
+    sum = items.Sum(item => item.weight);
+
+    foreach (Enemy enemy in FindObjectsOfType<Enemy>())
+        enemy.OnDeath += () => OnEnemyDeath(enemy);
+}
+
+private void OnEnemyDeath(Enemy enemy)
+{
+    float probability = Random.Range(0f, 1f);
+    float accumulated = 0f;
+
+    foreach (ItemProperty item in items)
+    {
+        accumulated += item.weight / sum;
+        if (probability > accumulated)
+            continue;
+
+        if (item.itemPrefab != null)
+        {
+            Item instance = Instantiate(
+                item.itemPrefab,
+                enemy.transform.position,
+                Quaternion.identity);
+
+            item.data.TrySetValue(instance);
+        }
+        return;
+    }
+}
+~~~
 
 ### 플레이어 상태와 부활
 
@@ -153,7 +227,7 @@ Back to the Dungeon은 여러 종류의 총기와 적 패턴을 활용해 스테
 - 부활 아이템 보유 시 사망 처리 대신 일정 시간 후 체력을 회복하고 무적 상태로 복귀합니다.
 - 체력, 최대 체력, 최대 스태미나, 부활 여부와 잔여 생명을 저장 데이터로 변환합니다.
 
-> UML 플레이스홀더 — `Hero`의 정상·피격·사망·부활·무적 상태 전이
+<img src="Docs/Images/hero-state.png" alt="Hero 상태 전이 UML" width="80%">
 
 ### UI 통합 관리
 
@@ -169,7 +243,7 @@ Back to the Dungeon은 여러 종류의 총기와 적 패턴을 활용해 스테
 - Stack을 이용해 일시정지와 설정 화면의 이전 UI 상태를 복원합니다.
 - Scene 로드 이벤트와 연동해 시작 화면과 인게임 HUD를 전환합니다.
 
-> UML 플레이스홀더 — `UIManager`와 `Hero`·`PlayerShooter`·`GameManager` 사이의 UI 갱신 관계
+<img src="Docs/Images/ui-relations.png" alt="UIManager 갱신 관계 UML" width="85%">
 
 ### 저장 시스템
 
@@ -186,7 +260,7 @@ Back to the Dungeon은 여러 종류의 총기와 적 패턴을 활용해 스테
 
 > 이 코드는 2021~2022년 프로젝트 당시의 구현을 보존한 것으로, 현재 환경에서는 보안상 사용이 권장되지 않는 `BinaryFormatter`를 포함합니다.
 
-> UML 플레이스홀더 — `ISaveable` 등록부터 `SaveManager.Save`·`Load`를 통한 복원까지의 시퀀스
+<img src="Docs/Images/save-sequence.png" alt="저장과 불러오기 시퀀스 UML" width="80%">
 
 ### 문과 스위치 상호작용
 
@@ -201,7 +275,46 @@ Back to the Dungeon은 여러 종류의 총기와 적 패턴을 활용해 스테
 - [`Door`](Scripts/Other%20Objects/Interation%20Objects/Door.cs)는 코루틴과 보간을 이용해 문을 정해진 시간 동안 이동시킵니다.
 - 동작 완료 후 스위치의 충돌을 비활성화해 중복 실행을 방지합니다.
 
-> 코드 샘플 플레이스홀더 — `Switch` 입력, `OnDeath` 활성화, `Door` 코루틴 실행 흐름
+**핵심 코드**
+
+[`Switch`](Scripts/Other%20Objects/Interation%20Objects/Switch.cs)는 적 사망 또는 플레이어 입력을 문 개방 조건으로 연결하고, [`Door`](Scripts/Other%20Objects/Interation%20Objects/Door.cs)는 코루틴에서 위치를 보간합니다.
+
+~~~csharp
+// Switch.cs
+private void Start()
+{
+    if (enableTrigger != null && GetEnemyComponent(out Enemy enemy))
+    {
+        gameObject.SetActive(false);
+        enemy.OnDeath += () => gameObject.SetActive(true);
+    }
+}
+
+private void OnTriggerStay2D(Collider2D collision)
+{
+    if (!collision.CompareTag("Player"))
+        return;
+
+    playerInput ??= collision.GetComponent<PlayerInput>();
+    if (playerInput.Interact && isDoor)
+        transform.parent.GetComponent<Door>().Open();
+}
+
+// Door.cs
+private IEnumerator MoveDoor(int index, Vector3 start, Vector3 destination)
+{
+    float elapsed = 0f;
+
+    while (elapsed <= openTime)
+    {
+        doors[index].transform.position =
+            Vector2.Lerp(start, destination, elapsed / openTime);
+
+        elapsed += 0.02f;
+        yield return new WaitForFixedUpdate();
+    }
+}
+~~~
 
 ## 실행 및 확인
 
